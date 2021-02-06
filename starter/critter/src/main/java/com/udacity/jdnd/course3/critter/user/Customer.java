@@ -10,6 +10,7 @@ import java.util.List;
 @Entity
 public class Customer extends User {
     private String phoneNumber;
+    private String notes;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Pet> pets;
@@ -36,5 +37,13 @@ public class Customer extends User {
 
     public void setPets(List<Pet> pets) {
         this.pets = pets;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }
