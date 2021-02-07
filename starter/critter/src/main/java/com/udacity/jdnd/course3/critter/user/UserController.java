@@ -1,11 +1,15 @@
 package com.udacity.jdnd.course3.critter.user;
 
+import com.udacity.jdnd.course3.critter.pet.Pet;
 import com.udacity.jdnd.course3.critter.service.CustomerService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Handles web requests related to Users.
@@ -16,7 +20,7 @@ import java.util.Set;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    private CustomerService customerService;
+    private final CustomerService customerService;
 
     public UserController(CustomerService customerService) {
         this.customerService = customerService;
@@ -24,17 +28,45 @@ public class UserController {
 
     @PostMapping("/customer")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
-        return this.customerService.createCustomer(customerDTO);
+        Customer customer = new Customer(customerDTO.getName(), customerDTO.getPhoneNumber());
+
+        return toCustomerDTO(this.customerService.save(customer));
     }
 
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers(){
-        return this.customerService.getAll();
+        List<CustomerDTO> customerDTOS = new ArrayList<>();
+        List<Customer> customers = this.customerService.getAll();
+
+        for (Customer customer: customers) {
+            customerDTOS.add(toCustomerDTO(customer));
+        }
+
+        return customerDTOS;
     }
 
     @GetMapping("/customer/pet/{petId}")
     public CustomerDTO getOwnerByPet(@PathVariable long petId){
-        throw new UnsupportedOperationException();
+        return toCustomerDTO(this.customerService.getByPet(petId));
+    }
+
+    private CustomerDTO toCustomerDTO(Customer customer) {
+        CustomerDTO customerDTO = new CustomerDTO();
+
+        if (customer == null) {
+            return customerDTO;
+        }
+
+        List<Pet> pets = customer.getPets();
+        BeanUtils.copyProperties(customer, customerDTO);
+
+        if (pets != null) {
+            customerDTO.setPetIds(
+                pets.stream().map(pet -> pet.getId()).collect(Collectors.toList())
+            );
+        }
+
+        return customerDTO;
     }
 
     @PostMapping("/employee")
