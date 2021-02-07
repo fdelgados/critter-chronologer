@@ -13,7 +13,7 @@ public class Pet {
 
     private PetType type;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 

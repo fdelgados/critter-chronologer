@@ -1,58 +1,35 @@
 package com.udacity.jdnd.course3.critter.service;
 
 import com.udacity.jdnd.course3.critter.persistence.CustomerRepository;
+import com.udacity.jdnd.course3.critter.persistence.PetRepository;
 import com.udacity.jdnd.course3.critter.pet.Pet;
 import com.udacity.jdnd.course3.critter.user.Customer;
-import com.udacity.jdnd.course3.critter.user.CustomerDTO;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class CustomerService {
-    private CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
+    private final PetRepository petRepository;
 
-    public CustomerService(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepository customerRepository, PetRepository petRepository) {
         this.customerRepository = customerRepository;
+        this.petRepository = petRepository;
     }
 
-    public CustomerDTO createCustomer(CustomerDTO customerDTO) {
-        Customer customer = this.customerRepository.save(
-            new Customer(customerDTO.getName(), customerDTO.getPhoneNumber())
-        );
-
-        return createDTO(customer);
+    public Customer save(Customer customer) {
+        return this.customerRepository.save(customer);
     }
 
-    public List<CustomerDTO> getAll() {
-        List<CustomerDTO> customerDTOS = new ArrayList<>();
-        List<Customer> customers = this.customerRepository.findAll();
-
-        for (Customer customer: customers) {
-            customerDTOS.add(createDTO(customer));
-        }
-
-        return customerDTOS;
+    public List<Customer> getAll() {
+        return this.customerRepository.findAll();
     }
 
-    private CustomerDTO createDTO(Customer customer) {
-        CustomerDTO customerDTO = new CustomerDTO();
+    public Customer getByPet(long petId) {
+        Optional<Pet> pet = petRepository.findById(petId);
 
-        customerDTO.setId(customer.getId());
-        customerDTO.setName(customer.getName());
-        customerDTO.setPhoneNumber(customer.getPhoneNumber());
-        customerDTO.setNotes(customer.getNotes());
-
-        List<Pet> pets = customer.getPets();
-
-        if (pets != null) {
-            customerDTO.setPetIds(
-                pets.stream().map(pet -> pet.getId()).collect(Collectors.toList())
-            );
-        }
-
-        return customerDTO;
+        return pet.map(Pet::getCustomer).orElse(null);
     }
 }
