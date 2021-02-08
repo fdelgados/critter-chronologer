@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional
 @Service
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
@@ -33,7 +34,6 @@ public class ScheduleService {
         this.customerRepository = customerRepository;
     }
 
-    @Transactional
     public Schedule save(Schedule schedule, List<Long> employeeIds, List<Long> petIds) {
         List<Pet> pets = petRepository.findAllById(petIds);
         List<Employee> employees = employeeRepository.findAllById(employeeIds);

@@ -5,10 +5,12 @@ import com.udacity.jdnd.course3.critter.persistence.PetRepository;
 import com.udacity.jdnd.course3.critter.pet.Pet;
 import com.udacity.jdnd.course3.critter.user.Customer;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 @Service
 public class CustomerService {
     private final CustomerRepository customerRepository;

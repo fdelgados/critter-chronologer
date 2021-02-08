@@ -4,6 +4,7 @@ import com.udacity.jdnd.course3.critter.persistence.EmployeeRepository;
 import com.udacity.jdnd.course3.critter.user.Employee;
 import com.udacity.jdnd.course3.critter.user.EmployeeSkill;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;

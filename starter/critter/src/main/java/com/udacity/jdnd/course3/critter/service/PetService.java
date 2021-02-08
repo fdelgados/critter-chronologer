@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional
 @Service
 public class PetService {
     private final PetRepository petRepository;
@@ -19,7 +20,6 @@ public class PetService {
         this.customerRepository = customerRepository;
     }
 
-    @Transactional
     public Pet save(Pet pet, Long ownerId) {
         Customer customer = customerRepository.getOne(ownerId);
         pet.setCustomer(customer);
