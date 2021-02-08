@@ -12,17 +12,53 @@ import java.util.Set;
 @Entity
 public class Schedule {
     @Id
-    @GeneratedValue
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-    @ManyToMany(targetEntity = Employee.class)
+    @ManyToMany
     private List<Employee> employees;
 
-    @ManyToMany(targetEntity = Pet.class)
+    @ManyToMany
     private List<Pet> pets;
 
     private LocalDate date;
 
     @ElementCollection
     private Set<EmployeeSkill> activities;
+
+    public long getId() {
+        return id;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public Set<EmployeeSkill> getActivities() {
+        return activities;
+    }
+
+    public void setActivities(Set<EmployeeSkill> activities) {
+        this.activities = activities;
+    }
+
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
+    }
+
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setPets(List<Pet> pets) {
+        this.pets = pets;
+    }
+
+    public List<Pet> getPets() {
+        return pets;
+    }
 }
